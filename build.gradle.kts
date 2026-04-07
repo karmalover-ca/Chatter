@@ -13,10 +13,18 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     implementation("dev.vankka:enhancedlegacytext:2.0.0")
+    compileOnly("net.luckperms:api:5.4")
 }
 
+val targetJavaVersion = 21
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(25)
+    val javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
+    }
 }
 
 tasks {

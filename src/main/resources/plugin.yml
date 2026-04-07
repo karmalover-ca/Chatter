@@ -5,6 +5,8 @@ version: '$version'
 main: ca.klns.chatter.Chatter
 api-version: '1.21.4'
 load: POSTWORLD
+depend:
+  - LuckPerms
 
 authors: [ Liam Pilson ]
 website: https://klns.ca
