@@ -1,0 +1,10 @@
+name: Chatter
+description: $description
+version: '$version'
+
+main: ca.klns.chatter.Chatter
+api-version: '1.21.4'
+load: POSTWORLD
+
+authors: [ Liam Pilson ]
+website: https://klns.ca
