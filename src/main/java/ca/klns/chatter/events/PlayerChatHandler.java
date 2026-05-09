@@ -87,12 +87,15 @@ public class PlayerChatHandler implements Listener {
 
         String color = metaData.getMetaValue("namecolor");
 
-        if(color == null) {
-            return Component.text(player.getName());
+        Component displayName = player.displayName();
+        String plainDisplayName = PlainTextComponentSerializer.plainText().serialize(displayName);
+
+        if (color == null) {
+            return displayName;
         }
 
 
-        return EnhancedLegacyText.get().buildComponent(color + player.getName()).build();
+        return EnhancedLegacyText.get().buildComponent(color + plainDisplayName).build();
     }
 
     private void sendChatMessage(Player source, Component message, Audience viewer) {
