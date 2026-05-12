@@ -1,0 +1,16 @@
+# =========================================
+# Chatter Configuration
+# =========================================
+# Customize chat formatting and settings here.
+# Run chatter reload to apply the changes
+# =========================================
+
+# Chat format
+# Available placeholders
+#   <player>   - Player displayName
+#   <message>  - Chat message
+#   <prefix>   - LuckPerms prefix
+#   <suffix>   - LuckPerms suffix
+#
+# Also support & colour formatting
+chat-format: "<prefix><player><suffix> <dark_gray>>></dark_gray> <message>"

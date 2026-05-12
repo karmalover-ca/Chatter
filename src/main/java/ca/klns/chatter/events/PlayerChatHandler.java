@@ -1,19 +1,17 @@
 package ca.klns.chatter.events;
 
 import ca.klns.chatter.Chatter;
-import dev.vankka.enhancedlegacytext.EnhancedLegacyText;
+import ca.klns.chatter.utils.ConfigManager;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.cacheddata.CachedMetaData;
-import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.NodeType;
-import net.luckperms.api.node.types.MetaNode;
 import net.luckperms.api.node.types.PrefixNode;
 import net.luckperms.api.node.types.SuffixNode;
 import net.luckperms.api.query.QueryOptions;
@@ -25,14 +23,9 @@ import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.logging.Level;
-import java.util.stream.Stream;
 
 public class PlayerChatHandler implements Listener {
-    private static final TextComponent CHAT_SEPARATOR = Component.text(" >> ", NamedTextColor.DARK_GRAY);
-
     private final Chatter core;
 
     public PlayerChatHandler(Chatter core) {
@@ -62,7 +55,9 @@ public class PlayerChatHandler implements Listener {
 
         String prefix = prefixNodes.getLast().getKey().split("\\.")[2];
 
-        return EnhancedLegacyText.get().parse(prefix);
+        MiniMessage miniMessage = MiniMessage.miniMessage();
+
+        return miniMessage.deserialize(prefix);
     }
 
     private Component constructSuffixComponent(Player player) {
@@ -76,7 +71,9 @@ public class PlayerChatHandler implements Listener {
 
         String suffix = suffixNodes.getLast().getKey().split("\\.")[2];
 
-        return EnhancedLegacyText.get().parse(suffix);
+        MiniMessage miniMessage = MiniMessage.miniMessage();
+
+        return miniMessage.deserialize(suffix);
     }
 
     private Component constructNameComponent(Player player) {
@@ -84,17 +81,18 @@ public class PlayerChatHandler implements Listener {
 
         CachedMetaData metaData = luckPerms.getPlayerAdapter(Player.class).getMetaData(player);
 
-        String color = metaData.getMetaValue("namecolor");
+        String color = metaData.getMetaValue("namecolour");
 
         Component displayName = player.displayName();
         String plainDisplayName = PlainTextComponentSerializer.plainText().serialize(displayName);
 
-        if (color == null) {
+        if (color == null || color.isBlank()) {
             return displayName;
         }
 
+        MiniMessage miniMessage = MiniMessage.miniMessage();
 
-        return EnhancedLegacyText.get().buildComponent(color + plainDisplayName).build();
+        return miniMessage.deserialize(color + plainDisplayName);
     }
 
     private void sendChatMessage(Player source, Component message, Audience viewer) {
@@ -102,17 +100,28 @@ public class PlayerChatHandler implements Listener {
         Component suffix = constructSuffixComponent(source);
         Component displayName = constructNameComponent(source);
 
+        String rawMessage = PlainTextComponentSerializer.plainText().serialize(message);
+
+        MiniMessage miniMessage = MiniMessage.miniMessage();
+
+        // Parse player messages
+        Component parsedMessage = miniMessage.deserialize(rawMessage);
+
+        ConfigManager configManager = core.getConfigManager();
+        String format = configManager.getChatFormat();
+
+        Component finalMessage = miniMessage.deserialize(
+                format,
+                Placeholder.component("prefix", prefix),
+                Placeholder.component("player", displayName),
+                Placeholder.component("suffix", suffix),
+                Placeholder.component("message", parsedMessage)
+        );
+
+        viewer.sendMessage(finalMessage);
+
         String displayNamePlain = PlainTextComponentSerializer.plainText().serialize(displayName);
 
-        String messagePlain = PlainTextComponentSerializer.plainText().serialize(message);
-        if(!message.hasStyling()) {
-            message = EnhancedLegacyText.get().parse(messagePlain);
-        }
-
-        Component component = Component.text().append(prefix, displayName, suffix, CHAT_SEPARATOR, message).build();
-
-        viewer.sendMessage(component);
-
-        core.getLogger().log(Level.INFO, displayNamePlain + " >> " + messagePlain);
+        core.getLogger().log(Level.INFO, displayNamePlain + " >> " + rawMessage);
     }
 }
