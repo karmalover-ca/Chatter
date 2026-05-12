@@ -1,16 +1,19 @@
 package ca.klns.chatter;
 
 import ca.klns.chatter.events.PlayerChatHandler;
+import co.aikar.commands.PaperCommandManager;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.awt.print.Paper;
 import java.util.logging.Level;
 
 public final class Chatter extends JavaPlugin {
 
     public LuckPerms luckPerms;
+    private PaperCommandManager commandManager;
 
     @Override
     public void onEnable() {
@@ -31,6 +34,10 @@ public final class Chatter extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Shutting down!");
+    }
+
+    private void setupACF() {
+        commandManager = new PaperCommandManager(this);
     }
 
     private void loadModules() {

@@ -8,12 +8,14 @@ plugins {
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.aikar.co/content/groups/aikar/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     implementation("dev.vankka:enhancedlegacytext:2.0.0")
     compileOnly("net.luckperms:api:5.4")
+    implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 }
 
 val targetJavaVersion = 21
@@ -27,17 +29,13 @@ java {
     }
 }
 
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.add("-parameters")
+}
+
 tasks {
     build {
         dependsOn(shadowJar)
-    }
-
-    runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.21.4")
-        jvmArgs("-Xms2G", "-Xmx4G")
     }
 
     processResources {
