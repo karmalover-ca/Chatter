@@ -37,7 +37,6 @@ public class PlayerChatHandler implements Listener {
 
     public PlayerChatHandler(Chatter core) {
         this.core = core;
-        Bukkit.getServer().getPluginManager().registerEvents(this, core);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

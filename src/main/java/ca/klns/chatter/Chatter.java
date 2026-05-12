@@ -4,6 +4,7 @@ import ca.klns.chatter.events.PlayerChatHandler;
 import co.aikar.commands.PaperCommandManager;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,7 +18,9 @@ public final class Chatter extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        loadModules();
+        setupACF();
+        loadCommands();
+        registerListeners();
 
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if(provider == null) {
@@ -40,8 +43,13 @@ public final class Chatter extends JavaPlugin {
         commandManager = new PaperCommandManager(this);
     }
 
-    private void loadModules() {
-        // call commands, and listeners
-        new PlayerChatHandler(this);
+    private void loadCommands() {
+        // call commands
+    }
+
+    private void registerListeners() {
+        PluginManager pm = Bukkit.getPluginManager();
+
+        pm.registerEvents(new PlayerChatHandler(this), this);
     }
 }
