@@ -12,5 +12,15 @@
 #   <prefix>   - LuckPerms prefix
 #   <suffix>   - LuckPerms suffix
 #
-# Also support & colour formatting
+# Also support MiniMessage formatting
 chat-format: "<prefix><player><suffix> <dark_gray>>></dark_gray> <message>"
+
+# Join/Quit message
+# Available placeholders
+#   <player>   - Player displayName
+#   <prefix>   - LuckPerms prefix
+#   <suffix>   - LuckPerms suffix
+#
+# Also support MiniMessage formatting
+join-message: "<prefix><player><suffix> <yellow>joined the game</yellow>"
+quit-message: "<prefix><player><suffix> <yellow>left the game</yellow>"

@@ -1,6 +1,7 @@
 package ca.klns.chatter;
 
 import ca.klns.chatter.commands.ChatterCommand;
+import ca.klns.chatter.events.JoinQuitHandler;
 import ca.klns.chatter.events.PlayerChatHandler;
 import ca.klns.chatter.utils.ConfigManager;
 import co.aikar.commands.PaperCommandManager;
@@ -57,6 +58,7 @@ public final class Chatter extends JavaPlugin {
         PluginManager pm = Bukkit.getPluginManager();
 
         pm.registerEvents(new PlayerChatHandler(this), this);
+        pm.registerEvents(new JoinQuitHandler(this), this);
     }
 
     public PaperCommandManager getCommandManager() {

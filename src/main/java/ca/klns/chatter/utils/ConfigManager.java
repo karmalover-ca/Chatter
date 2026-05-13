@@ -8,6 +8,8 @@ public final class ConfigManager {
     private JavaPlugin plugin;
 
     private String chatFormat;
+    private String joinMessage;
+    private String quitMessage;
 
     //TODO add variable for different config options
 
@@ -21,6 +23,8 @@ public final class ConfigManager {
         FileConfiguration config = plugin.getConfig();
 
         chatFormat = config.getString("chat-format", "");
+        joinMessage = config.getString("join-message", "");
+        quitMessage = config.getString("quit-message", "");
     }
 
     public void reload() {
@@ -30,5 +34,13 @@ public final class ConfigManager {
 
     public String getChatFormat() {
         return chatFormat;
+    }
+
+    public String getJoinMessage() {
+        return joinMessage;
+    }
+
+    public String getQuitMessage() {
+        return quitMessage;
     }
 }
