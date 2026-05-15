@@ -22,9 +22,11 @@ public final class ConfigManager {
 
         FileConfiguration config = plugin.getConfig();
 
-        chatFormat = config.getString("chat-format", "");
-        joinMessage = config.getString("join-message", "");
-        quitMessage = config.getString("quit-message", "");
+        chatFormat = config.getString("chat-format", "<prefix><player><suffix> <dark_gray>>></dark_gray> <message>");
+        joinMessage = config.getString("join-message", "<prefix><player><suffix> <yellow>joined the game</yellow>");
+        quitMessage = config.getString("quit-message", "<prefix><player><suffix> <yellow>left the game</yellow>");
+
+        plugin.getLogger().info("Loaded config!");
     }
 
     public void reload() {

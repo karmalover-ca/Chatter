@@ -21,12 +21,12 @@ public final class Chatter extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        configManager = new ConfigManager(this);
+        configManager.load();
+
         setupACF();
         loadCommands();
         registerListeners();
-
-        configManager = new ConfigManager(this);
-        configManager.load();
 
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if(provider == null) {
